@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0 20px;
+            border-bottom: 2px solid #dfe7f5;
+            padding-bottom: 10px;
+        }
+        .tab {
+            background: #e2e8f0;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            padding: 12px 18px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #334155;
+        }
+        .tab.active {
+            background: #2563eb;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        input, button {
+            padding: 10px 12px;
+            font-size: 14px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #eff6ff;
+        }
+        .messages {
+            margin-bottom: 20px;
+        }
+        .message {
+            padding: 10px 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Library Management System</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="messages">
+                    {% for category, message in messages %}
+                        <div class="message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="tabs">
+            <button class="tab active" data-tab="students">Students</button>
+            <button class="tab" data-tab="books">Books</button>
+            <button class="tab" data-tab="penalties">Penalty Rules</button>
+            <button class="tab" data-tab="transactions">Transactions</button>
+        </div>
+
+        <div class="tab-content active" id="students">
+            <div class="grid">
+                <div class="card">
+                    <h2>Add Student</h2>
+                    <form action="/students/add" method="post">
+                        <input type="text" name="student_name" placeholder="Student Name" required>
+                        <input type="text" name="section" placeholder="Section" required>
+                        <input type="text" name="year_level" placeholder="Year Level" required>
+                        <input type="text" name="student_id" placeholder="Student ID" required>
+                        <button type="submit">Add Student</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom:20px;">
+                <h2>Students</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Section</th>
+                            <th>Year Level</th>
+                            <th>Student ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td>{{ student.student_name }}</td>
+                                <td>{{ student.section }}</td>
+                                <td>{{ student.year_level }}</td>
+                                <td>{{ student.student_id }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-content" id="books">
+            <div class="grid">
+                <div class="card">
+                    <h2>Add Book</h2>
+                    <form action="/books/add" method="post">
+                        <input type="text" name="isbn" placeholder="ISBN" required>
+                        <input type="text" name="accession_number" placeholder="Accession Number" required>
+                        <input type="text" name="book_type" placeholder="Book Type" required>
+                        <button type="submit">Add Book</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom:20px;">
+                <h2>Books</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Book ID</th>
+                            <th>ISBN</th>
+                            <th>Accession Number</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in books %}
+                            <tr>
+                                <td>{{ book.book_id }}</td>
+                                <td>{{ book.isbn }}</td>
+                                <td>{{ book.accession_number }}</td>
+                                <td>{{ book.book_type }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-content" id="penalties">
+            <div class="grid">
+                <div class="card">
+                    <h2>Add Penalty Rule</h2>
+                    <form action="/penalties/add" method="post">
+                        <input type="text" name="book_type" placeholder="Book Type" required>
+                        <input type="number" name="days_allowed" placeholder="Days Allowed" min="1" required>
+                        <input type="number" name="daily_penalty" step="0.01" placeholder="Daily Penalty" value="10">
+                        <button type="submit">Save Rule</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom:20px;">
+                <h2>Penalty Rules</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Book Type</th>
+                            <th>Days Allowed</th>
+                            <th>Daily Penalty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for penalty in penalties %}
+                            <tr>
+                                <td>{{ penalty.book_type }}</td>
+                                <td>{{ penalty.days_allowed }}</td>
+                                <td>{{ penalty.daily_penalty }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-content" id="transactions">
+            <div class="grid">
+                <div class="card">
+                    <h2>Borrow Book</h2>
+                    <form action="/transactions/borrow" method="post">
+                        <input type="text" name="student_id" placeholder="Student ID" required>
+                        <input type="text" name="accession_number" placeholder="Accession Number" required>
+                        <input type="date" name="borrow_date" required>
+                        <button type="submit">Borrow</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h2>Return Book</h2>
+                    <form action="/transactions/return" method="post">
+                        <input type="number" name="transaction_id" placeholder="Transaction ID" required>
+                        <input type="date" name="return_date" required>
+                        <button type="submit">Return</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Transactions</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Student ID</th>
+                            <th>Accession No.</th>
+                            <th>Borrow Date</th>
+                            <th>Due Date</th>
+                            <th>Return Date</th>
+                            <th>Penalty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tx in transactions %}
+                            <tr>
+                                <td>{{ tx.transaction_id }}</td>
+                                <td>{{ tx.student_id }}</td>
+                                <td>{{ tx.accession_number }}</td>
+                                <td>{{ tx.borrow_date }}</td>
+                                <td>{{ tx.due_date }}</td>
+                                <td>{{ tx.return_date or 'Not returned' }}</td>
+                                <td>{{ tx.penalty }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+
+                tabs.forEach(item => item.classList.toggle('active', item === tab));
+                tabContents.forEach(content => {
+                    content.classList.toggle('active', content.id === target);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
